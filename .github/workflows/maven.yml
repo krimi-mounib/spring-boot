@@ -1,0 +1,27 @@
+name: Maven verification
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - atelier-2/autoloc-api
+          - atelier-4/autoloc-api
+          - atelier-5/autoloc-api
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          cache-dependency-path: ${{ matrix.project }}/pom.xml
+      - name: Verify Maven project
+        run: ./mvnw -B clean test
