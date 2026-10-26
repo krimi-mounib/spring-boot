@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
     @Bean
-    public OpenAPI autolocOpenApi() {
+    public OpenAPI autoLocOpenApi() {
         return new OpenAPI().info(new Info().title("AutoLoc API")
-                .description("API REST de gestion de location de véhicules — ASI 26-27")
+                .description("API REST AutoLoc : agences, véhicules, clients, réservations, contrats et simulation de prix")
                 .version("1.0.0"));
     }
 }

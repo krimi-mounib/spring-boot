@@ -18,18 +18,52 @@ import java.util.List;
 @Tag(name = "Maintenances", description = "Gestion des maintenances AutoLoc")
 public class MaintenanceController {
     private final IMaintenanceService service;
-    @GetMapping @Operation(summary = "Lister les maintenances") @ApiResponse(responseCode = "200", description = "Liste retournée")
+
+    @GetMapping
+    @Operation(summary = "Lister les maintenances")
+    @ApiResponse(responseCode = "200", description = "Liste retournée")
     public List<Maintenance> findAll() { return service.findAll(); }
-    @GetMapping("/{id}") @Operation(summary = "Consulter une maintenance")
-    @ApiResponses({@ApiResponse(responseCode = "200", description = "Ressource trouvée"), @ApiResponse(responseCode = "404", description = "Introuvable")})
-    public Maintenance findById(@Parameter(description = "Identifiant", example = "1") @PathVariable Long id) { return service.findById(id); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) @Operation(summary = "Créer une maintenance")
-    @ApiResponses({@ApiResponse(responseCode = "201", description = "Ressource créée"), @ApiResponse(responseCode = "400", description = "Données invalides"), @ApiResponse(responseCode = "409", description = "Conflit d’intégrité")})
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Consulter une maintenance")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Ressource trouvée"),
+        @ApiResponse(responseCode = "404", description = "Ressource introuvable")
+    })
+    public Maintenance findById(@Parameter(description = "Identifiant de la ressource", example = "1") @PathVariable Long id) {
+        return service.findById(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Créer une maintenance")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Ressource créée"),
+        @ApiResponse(responseCode = "400", description = "Corps invalide ou identifiant fourni"),
+        @ApiResponse(responseCode = "409", description = "Conflit d’intégrité des données")
+    })
     public Maintenance create(@RequestBody Maintenance entity) { return service.create(entity); }
-    @PutMapping("/{id}") @Operation(summary = "Modifier une maintenance")
-    @ApiResponses({@ApiResponse(responseCode = "200", description = "Ressource modifiée"), @ApiResponse(responseCode = "400", description = "Données invalides"), @ApiResponse(responseCode = "404", description = "Introuvable"), @ApiResponse(responseCode = "409", description = "Conflit d’intégrité")})
-    public Maintenance update(@Parameter(description = "Identifiant", example = "1") @PathVariable Long id, @RequestBody Maintenance entity) { return service.update(id, entity); }
-    @DeleteMapping("/{id}") @ResponseStatus(HttpStatus.NO_CONTENT) @Operation(summary = "Supprimer une maintenance")
-    @ApiResponses({@ApiResponse(responseCode = "204", description = "Supprimée"), @ApiResponse(responseCode = "404", description = "Introuvable"), @ApiResponse(responseCode = "409", description = "Toujours référencée")})
-    public void deleteById(@Parameter(description = "Identifiant", example = "1") @PathVariable Long id) { service.deleteById(id); }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Modifier une maintenance")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Ressource modifiée"),
+        @ApiResponse(responseCode = "400", description = "Valeur invalide"),
+        @ApiResponse(responseCode = "404", description = "Ressource introuvable"),
+        @ApiResponse(responseCode = "409", description = "Conflit d’intégrité des données")
+    })
+    public Maintenance update(@Parameter(description = "Identifiant de la ressource", example = "1") @PathVariable Long id,
+                           @RequestBody Maintenance entity) { return service.update(id, entity); }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Supprimer une maintenance")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Ressource supprimée"),
+        @ApiResponse(responseCode = "404", description = "Ressource introuvable"),
+        @ApiResponse(responseCode = "409", description = "Ressource encore référencée")
+    })
+    public void deleteById(@Parameter(description = "Identifiant de la ressource", example = "1") @PathVariable Long id) {
+        service.deleteById(id);
+    }
 }

@@ -11,17 +11,47 @@ import tn.esprit.mohamedmounibkrimicce11.exception.ResourceNotFoundException;
 @RequiredArgsConstructor
 public class EquipementServiceImpl implements IEquipementService {
     private final IEquipementRepository repository;
-    @Override public Equipement create(Equipement entity) {
+
+    @Override
+    public Equipement create(Equipement entity) {
         if (entity == null) throw new IllegalArgumentException("Equipement obligatoire");
-        if (entity.getIdEquipement() != null) throw new IllegalArgumentException("Un nouvel equipement ne doit pas avoir d'identifiant");
-        validate(entity); return repository.save(entity);
+        if (entity.getIdEquipement() != null) {
+            throw new IllegalArgumentException("Un nouvel equipement ne doit pas avoir d'identifiant");
+        }
+        validate(entity);
+        return repository.save(entity);
     }
-    @Override public Equipement findById(Long id) { return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Equipement", id)); }
-    @Override public List<Equipement> findAll() { return repository.findAll(); }
-    @Override public Equipement update(Long id, Equipement entity) {
+
+    @Override
+    public Equipement findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Equipement", id));
+    }
+
+    @Override
+    public List<Equipement> findAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public Equipement update(Long id, Equipement entity) {
         if (entity == null) throw new IllegalArgumentException("Equipement obligatoire");
-        Equipement existing = findById(id); validate(entity); existing.setLibelle(entity.getLibelle()); return repository.save(existing);
+        Equipement existing = findById(id);
+        validate(entity);
+        existing.setLibelle(entity.getLibelle());
+        return repository.save(existing);
     }
-    @Override public void deleteById(Long id) { if (!repository.existsById(id)) throw new ResourceNotFoundException("Equipement", id); repository.deleteById(id); }
-    private void validate(Equipement entity) { if (entity.getLibelle() == null || entity.getLibelle().isBlank()) throw new IllegalArgumentException("Le libellé est obligatoire"); }
+
+    @Override
+    public void deleteById(Long id) {
+        if (!repository.existsById(id)) throw new ResourceNotFoundException("Equipement", id);
+        repository.deleteById(id);
+    }
+
+    private void validate(Equipement entity) {
+        requireText(entity.getLibelle(), "libelle");
+    }
+
+    private void requireText(String value, String field) {
+        if (value == null || value.isBlank()) throw new IllegalArgumentException("Le champ " + field + " est obligatoire");
+    }
 }

@@ -17,9 +17,19 @@ import java.util.List;
 @Tag(name = "Paiements", description = "Consultation des paiements (lecture seule)")
 public class PaiementController {
     private final IPaiementService paiementService;
-    @GetMapping @Operation(summary = "Lister les paiements") @ApiResponse(responseCode = "200", description = "Liste retournée")
+
+    @GetMapping
+    @Operation(summary = "Lister les paiements")
+    @ApiResponse(responseCode = "200", description = "Liste retournée")
     public List<Paiement> findAll() { return paiementService.findAll(); }
-    @GetMapping("/{id}") @Operation(summary = "Consulter un paiement")
-    @ApiResponses({@ApiResponse(responseCode = "200", description = "Paiement trouvé"), @ApiResponse(responseCode = "404", description = "Paiement introuvable")})
-    public Paiement findById(@Parameter(description = "Identifiant du paiement", example = "1") @PathVariable Long id) { return paiementService.findById(id); }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Consulter un paiement")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Paiement trouvé"),
+        @ApiResponse(responseCode = "404", description = "Paiement introuvable")
+    })
+    public Paiement findById(@Parameter(description = "Identifiant du paiement", example = "1") @PathVariable Long id) {
+        return paiementService.findById(id);
+    }
 }
